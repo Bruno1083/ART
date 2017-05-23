@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, $ionicModal, $rootScope) {
+.controller('MapaCtrl', function($scope, $ionicModal, $rootScope, myApi, $ionicPopup) {
 
   $scope.logado = false;
 
@@ -9,10 +9,10 @@ angular.module('starter.controllers', [])
     if( !$scope.logado){
       $scope.modal.show();
       $scope.logado = true;
-    }
-    
+    }    
   });
   
+  // tela de login
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -29,7 +29,7 @@ angular.module('starter.controllers', [])
 
 
 
- 
+  // mapa
   var div = document.getElementById('mapa');
   div.style.height = $('#mapa').parent().height() + 'px';
 
@@ -46,6 +46,29 @@ angular.module('starter.controllers', [])
   // carrega
   var map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
 
+
+  // carrega os mudeus
+  myApi.getMuseus().then( function(locais){
+    // marcadores
+    for (var i = 0; i < locais.length; i++) {
+      ( function(){
+        var local = locais[i];
+        
+        var marker = new google.maps.Marker({
+          position: {lat: Number(local.latitude), lng: Number(local.longitude)},
+          map: map,
+          title: local.nome
+        });
+
+        // click
+        marker.addListener('click', function() {
+          $ionicPopup.alert({ title: local.nome, template: local.logradouro + '<br>' + local.telefone});
+          // $scope.abrir('#/...');
+        });
+      })();
+    } // end for
+  });
+
 })
 
 .controller('ChatsCtrl', function($scope, Chats) {
@@ -57,14 +80,14 @@ angular.module('starter.controllers', [])
   //$scope.$on('$ionicView.enter', function(e) {
   //});
 
-  $scope.chats = Chats.all();
+  /*$scope.chats = Chats.all();
   $scope.remove = function(chat) {
     Chats.remove(chat);
-  };
+  };*/
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
+  // $scope.chat = Chats.get($stateParams.chatId);
 })
 
 .controller('AccountCtrl', function($scope) {
