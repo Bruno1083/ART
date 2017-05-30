@@ -1,1 +1,10 @@
-/* Empty. Add your own CSS if you like */
+
+div.img{
+	height: 120px;
+	background-color: #f9f9f9;
+	text-align: center;
+	padding-top: 15%;
+}
+div.img i{ font-size: 2em; color: #ccc;}
+
+h3{ text-align: center;}

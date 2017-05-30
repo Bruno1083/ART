@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('MapaCtrl', function($scope, $ionicModal, $rootScope, myApi, $ionicPopup) {
+.controller('MapaCtrl', function($scope, $ionicModal, $rootScope, myApi, $ionicPopup, $state) {
 
   $scope.logado = false;
 
@@ -53,6 +53,7 @@ angular.module('starter.controllers', [])
     for (var i = 0; i < locais.length; i++) {
       ( function(){
         var local = locais[i];
+        var index = i;
         
         var marker = new google.maps.Marker({
           position: {lat: Number(local.latitude), lng: Number(local.longitude)},
@@ -62,8 +63,9 @@ angular.module('starter.controllers', [])
 
         // click
         marker.addListener('click', function() {
-          $ionicPopup.alert({ title: local.nome, template: local.logradouro + '<br>' + local.telefone});
-          // $scope.abrir('#/...');
+          // $ionicPopup.alert({ title: local.nome, template: local.logradouro + '<br>' + local.telefone});
+          // window.location.href = '#/tab/monumento/'+index;
+          $state.go('tab.monumento', {i: index});
         });
       })();
     } // end for
@@ -71,7 +73,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('ChatsCtrl', function($scope, Chats) {
+.controller('DescobrirCtrl', function($scope) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -79,15 +81,11 @@ angular.module('starter.controllers', [])
   //
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-
-  /*$scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };*/
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  // $scope.chat = Chats.get($stateParams.chatId);
+.controller('MonumentoCtrl', function($scope, $stateParams, myApi) {
+
+  $scope.monumento = myApi.getMonumento($stateParams.i);
 })
 
 .controller('AccountCtrl', function($scope) {
